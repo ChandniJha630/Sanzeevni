@@ -1,8 +1,9 @@
-from tkinter import *
+import sys
+import json
+import ast
 import numpy as np
 import pandas as pd
-from PIL import ImageTk, Image  
-import tkinter
+
 
 
 symptoms=['back_pain','constipation','abdominal_pain','diarrhoea','mild_fever','yellow_urine',
@@ -124,6 +125,7 @@ remedy = [  # Fungal infection
 input_symptoms=[]
 for x in range(0,len(symptoms)):
     input_symptoms.append(0)
+    
 
 # TESTING DATA df -------------------------------------------------------------------------------------
 df=pd.read_csv("Training.csv")
@@ -163,7 +165,7 @@ y_test = tr[["prognosis"]]
 np.ravel(y_test)
 # ------------------------------------------------------------------------------------------------------
 
-def DecisionTree():
+def DecisionTree(sa,sb,sc,sd,se):
 
     from sklearn import tree
 
@@ -177,7 +179,7 @@ def DecisionTree():
     print(accuracy_score(y_test, y_pred,normalize=False))
     # -----------------------------------------------------
 
-    ground_of_prediction = [Symptom1.get(),Symptom2.get(),Symptom3.get(),Symptom4.get(),Symptom5.get()]
+    ground_of_prediction = [sa,sb,sc,sd,se]
 
     for k in range(0,len(symptoms)):
         # print (k,)
@@ -197,195 +199,11 @@ def DecisionTree():
 
 
     if (h=='yes'):
-        t1.delete("1.0", END)
-        t1.insert(END, disease[a])
-        t4.delete("1.0", END)
-        t4.insert(END, remedy[a])
+        d1=disease[a]
+        r1=remedy[a]
     else:
-        t1.delete("1.0", END)
-        t1.insert(END, "Not Found")
-        t4.delete("1.0", END)
-        t4.insert(END, "Not Found")
-        
+       d1='Cant be detected'
+       r1='no home remedy' 
+       
+       return d1+ " : " +r1
 
-
-def randomforest():
-    from sklearn.ensemble import RandomForestClassifier
-    RT_classification = RandomForestClassifier()
-    RT_classification = RT_classification.fit(X,np.ravel(y))
-
-    # calculating accuracy-------------------------------------------------------------------
-    from sklearn.metrics import accuracy_score
-    y_pred=RT_classification.predict(X_test)
-    print(accuracy_score(y_test, y_pred))
-    print(accuracy_score(y_test, y_pred,normalize=False))
-    # -----------------------------------------------------
-
-    ground_of_prediction = [Symptom1.get(),Symptom2.get(),Symptom3.get(),Symptom4.get(),Symptom5.get()]
-
-    for k in range(0,len(symptoms)):
-        for z in ground_of_prediction:
-            if(z==symptoms[k]):
-                input_symptoms[k]=1
-
-    inputtest = [input_symptoms]
-    predict = RT_classification.predict(inputtest)
-    predicted=predict[0]
-
-    h='no'
-    for a in range(0,len(disease)):
-        if(predicted == a):
-            h='yes'
-            break
-
-    if (h=='yes'):
-        t2.delete("1.0", END)
-        t2.insert(END, disease[a])
-        t5.delete("1.0", END)
-        t5.insert(END, remedy[a])
-    else:
-        t2.delete("1.0", END)
-        t2.insert(END, "Not Found")
-        t5.delete("1.0", END)
-        t5.insert(END, "Not Found")
-
-def NaiveBayes():
-    from sklearn.naive_bayes import GaussianNB
-    NB_classification = GaussianNB()
-    NB_classification=NB_classification.fit(X,np.ravel(y))
-
-    # calculating accuracy-------------------------------------------------------------------
-    from sklearn.metrics import accuracy_score
-    y_pred=NB_classification.predict(X_test)
-    print(accuracy_score(y_test, y_pred))
-    print(accuracy_score(y_test, y_pred,normalize=False))
-    # -----------------------------------------------------
-
-    ground_of_prediction = [Symptom1.get(),Symptom2.get(),Symptom3.get(),Symptom4.get(),Symptom5.get()]
-    for k in range(0,len(symptoms)):
-        for z in ground_of_prediction:
-            if(z==symptoms[k]):
-                input_symptoms[k]=1
-
-    inputtest = [input_symptoms]
-    predict = NB_classification.predict(inputtest)
-    predicted=predict[0]
-
-    h='no'
-    for a in range(0,len(disease)):
-        if(predicted == a):
-            h='yes'
-            break
-
-    if (h=='yes'):
-        t3.delete("1.0", END)
-        t3.insert(END, disease[a])
-        t6.delete("1.0", END)
-        t6.insert(END, remedy[a])
-    else:
-        t3.delete("1.0", END)
-        t3.insert(END, "Not Found")
-        t6.delete("1.0", END)
-        t6.insert(END, "Not Found")
-# gui_stuff------------------------------------------------------------------------------------
-
-
-root = tkinter.Tk()
-root.configure(background='#86C8BC')
-
-# entry variables
-Symptom1 = StringVar()
-Symptom1.set("Select Symptom")
-Symptom2 = StringVar()
-Symptom2.set("Select Symptom")
-Symptom3 = StringVar()
-Symptom3.set("Select Symptom")
-Symptom4 = StringVar()
-Symptom4.set("Select Symptom")
-Symptom5 = StringVar()
-Symptom5.set("Select Symptom")
-
-
-# Heading
-w2 = Label(root, justify=LEFT, text="sAnZeevni", fg="white", bg="#86C8BC")
-w2.config(font=("MS Serif", 30))
-w2.grid(row=1, column=1, columnspan=2, padx=50,pady=25)
-w2 = Label(root, justify=LEFT, text="Calming Feels  When Nature Heels", fg="white", bg="#86C8BC")
-w2.config(font=("Elephant", 16))
-w2.grid(row=1, column=2, columnspan=2, padx=50,pady=25)
-
-
-
-S1_labelLb = Label(root, text="Symptom 1", fg="white", bg="#86C8BC")
-S1_labelLb.grid(row=9, column=0, pady=10, sticky=W)
-
-S2_labelLb = Label(root, text="Symptom 2", fg="white", bg="#86C8BC")
-S2_labelLb.grid(row=10, column=0, pady=10, sticky=W)
-
-S3_labelLb = Label(root, text="Symptom 3", fg="white", bg="#86C8BC")
-S3_labelLb.grid(row=11, column=0, pady=10, sticky=W)
-
-S4_label = Label(root, text="Symptom 4", fg="white", bg="#86C8BC")
-S4_label.grid(row=12, column=0, pady=10, sticky=W)
-
-S5_label = Label(root, text="Symptom 5", fg="white", bg="#86C8BC")
-S5_label.grid(row=13, column=0, pady=10, sticky=W)
-
-
-R1 = Label(root, text="Remedy", fg="white", bg="#86C8BC")
-R1.grid(row=15, column=2, pady=10,sticky=W)
-
-R2 = Label(root, text="Remedy", fg="white", bg="#86C8BC")
-R2.grid(row=17, column=2, pady=10, sticky=W)
-
-R3 = Label(root, text="Remedy", fg="white", bg="#86C8BC")
-R3.grid(row=19, column=2, pady=10, sticky=W)
-
-# entries
-OPTIONS = sorted(symptoms)
-
-
-S1_label = OptionMenu(root, Symptom1,*OPTIONS)
-S1_label.grid(row=9, column=1)
-
-S2_label = OptionMenu(root, Symptom2,*OPTIONS)
-S2_label.grid(row=10, column=1)
-
-S3_label = OptionMenu(root, Symptom3,*OPTIONS)
-S3_label.grid(row=11, column=1)
-
-S4_label= OptionMenu(root, Symptom4,*OPTIONS)
-S4_label.grid(row=12, column=1)
-
-S5_label = OptionMenu(root, Symptom5,*OPTIONS)
-S5_label.grid(row=13, column=1)
-
-
-DT = Button(root, text="Possiblity1", command=DecisionTree,bg="green",fg="yellow")
-DT.grid(row=15, column=0,padx=10)
-
-RF = Button(root, text="Possiblity2", command=randomforest,bg="green",fg="yellow")
-RF.grid(row=17, column=0,padx=10)
-
-NB = Button(root, text="Possiblity3", command=NaiveBayes,bg="green",fg="yellow")
-NB.grid(row=19, column=0,padx=10)
-
-#textfileds
-t1 = Text(root, height=1, width=40,bg="white",fg="black")
-t1.grid(row=15, column=1, padx=10)
-
-t2 = Text(root, height=1, width=40,bg="white",fg="black")
-t2.grid(row=17, column=1 , padx=10)
-
-t3 = Text(root, height=1, width=40,bg="white",fg="black")
-t3.grid(row=19, column=1 , padx=10)
-
-t4 = Text(root, height=1, width=40,bg="white",fg="black")
-t4.grid(row=15, column=3, padx=10)
-
-t5 = Text(root, height=1, width=40,bg="white",fg="black")
-t5.grid(row=17, column=3 , padx=10)
-
-t6 = Text(root, height=1, width=40,bg="white",fg="black")
-t6.grid(row=19, column=3 , padx=10)
-root.mainloop()
