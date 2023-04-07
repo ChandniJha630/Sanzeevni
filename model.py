@@ -4,7 +4,7 @@ import ast
 import numpy as np
 import pandas as pd
 
-
+from fastapi import FastAPI
 
 symptoms=['back_pain','constipation','abdominal_pain','diarrhoea','mild_fever','yellow_urine',
 'yellowing_of_eyes','acute_liver_failure','fluid_overload','swelling_of_stomach',
@@ -165,20 +165,20 @@ y_test = tr[["prognosis"]]
 np.ravel(y_test)
 # ------------------------------------------------------------------------------------------------------
 
-def DecisionTree(sa,sb,sc,sd,se):
+# Decision Tree
+from sklearn import tree
 
-    from sklearn import tree
+DT_classification = tree.DecisionTreeClassifier()   # empty model of the decision tree
+DT_classification = DT_classification.fit(X,y)
 
-    DT_classification = tree.DecisionTreeClassifier()   # empty model of the decision tree
-    DT_classification = DT_classification.fit(X,y)
+# calculating accuracy-------------------------------------------------------------------
+from sklearn.metrics import accuracy_score
+y_pred=DT_classification.predict(X_test)
+print(accuracy_score(y_test, y_pred))
+print(accuracy_score(y_test, y_pred,normalize=False))
+# -----------------------------------------------------
 
-    # calculating accuracy-------------------------------------------------------------------
-    from sklearn.metrics import accuracy_score
-    y_pred=DT_classification.predict(X_test)
-    print(accuracy_score(y_test, y_pred))
-    print(accuracy_score(y_test, y_pred,normalize=False))
-    # -----------------------------------------------------
-
+def predict(sa,sb,sc,sd,se):
     ground_of_prediction = [sa,sb,sc,sd,se]
 
     for k in range(0,len(symptoms)):
@@ -205,5 +205,10 @@ def DecisionTree(sa,sb,sc,sd,se):
        d1='Cant be detected'
        r1='no home remedy' 
        
-       return d1+ " : " +r1
+    return {"disease": d1, "remedy": r1}
 
+app = FastAPI()
+
+@app.get("/")
+async def root(s1: str, s2: str, s3: str, s4: str, s5: str):
+    return predict(s1, s2, s3, s4, s5)
