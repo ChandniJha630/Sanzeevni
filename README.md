@@ -5,6 +5,7 @@ sAnZeevni is a website that provides home remedies for all the disease from A-Z.
 take you to real part of website. 
 
 There you can input 1-5 symptoms as per your requirement. And website will predict the disease and it corresponding home remedy on clicking predict button
+For rechecking and redoing all operations there is a redo button
 
 Technology that we used 
 
