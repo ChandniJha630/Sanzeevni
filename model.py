@@ -129,7 +129,7 @@ for x in range(0, len(symptoms)):
     input_symptoms.append(0)
 
 
-# TESTING DATA df -------------------------------------------------------------------------------------
+# TESTING DATA df 
 df = pd.read_csv("Training.csv")
 
 df.replace({'prognosis': {'Fungal infection': 0, 'Allergy': 1, 'GERD': 2, 'Chronic cholestasis': 3, 'Drug Reaction': 4,
@@ -150,7 +150,7 @@ y = df[["prognosis"]]
 np.ravel(y)
 # print(y)
 
-# TRAINING DATA tr --------------------------------------------------------------------------------
+# TRAINING DATA 
 tr = pd.read_csv("Testing.csv")
 tr.replace({'prognosis': {'Fungal infection': 0, 'Allergy': 1, 'GERD': 2, 'Chronic cholestasis': 3, 'Drug Reaction': 4,
                           'Peptic ulcer diseae': 5, 'AIDS': 6, 'Diabetes ': 7, 'Gastroenteritis': 8, 'Bronchial Asthma': 9, 'Hypertension ': 10,
@@ -165,20 +165,20 @@ tr.replace({'prognosis': {'Fungal infection': 0, 'Allergy': 1, 'GERD': 2, 'Chron
 X_test = tr[symptoms]
 y_test = tr[["prognosis"]]
 np.ravel(y_test)
-# ------------------------------------------------------------------------------------------------------
 
-# Decision Tree
+
+# Decision Tree Algo implementation
 
 # empty model of the decision tree
 DT_classification = tree.DecisionTreeClassifier()
 DT_classification = DT_classification.fit(X, y)
 
-# calculating accuracy-------------------------------------------------------------------
+# calculating accuracy
 
 y_pred = DT_classification.predict(X_test)
 print(accuracy_score(y_test, y_pred))
 print(accuracy_score(y_test, y_pred, normalize=False))
-# -----------------------------------------------------
+
 
 
 def predict(sa, sb, sc, sd, se):
@@ -208,6 +208,7 @@ def predict(sa, sb, sc, sd, se):
         r1 = 'no home remedy'
     print(d1)
     print(r1)
+            #returning data
     return {"Disease": d1, "Remedy": r1}
   
 
