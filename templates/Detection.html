@@ -59,10 +59,10 @@
       color: black;
       border-radius: 8px;
       padding: 1rem;
-      width: 33%;
+      width: 30%;
       height: 1 rem;
       margin-left: 33%;
-      margin-right: 33%;
+   
       margin-top: 2%;
       border-color: #5f8d4e;
       font-size: 24px;
@@ -75,6 +75,24 @@
     label {
       padding-left: 15%;
     }
+    .result{
+      width:100%;
+      background:#86c8bc;
+      display:block;
+      margin-top:2rem;
+      padding:2rem;
+    }
+    .redo{
+      background:white;
+      margin-right: 30%;
+      width:3rem;
+      height:3rem;
+      font-size:32px;
+    }
+    .redo:hover{
+      background:grey;
+      
+    }
   </style>
 
   <body>
@@ -83,7 +101,7 @@
         <li class="nav-brand">sAnZeewni</li>
         <li class="nav-items"><a href="{{ url_for('index') }}">Home</a></li>
         <li class="nav-items"><a href="{{ url_for('disease_detection') }}">Detect Disease</a></li>
-       
+      
       </ul>
     </nav>
     <form method="POST">
@@ -353,15 +371,19 @@
         <option value="hip_joint_pain">hip_joint_pain</option>
       </select>
       <button class="predict-btn">Predict</button>
+      <button class="redo"><a href="{{ url_for('disease_detection') }}">⟲</a></button>
     </form>
 
     {% if data != 'null' %}
       <!-- Show predicted output using ML model --> 
-      <div>
+      <div class="result">
         <center>
-          <h2>{{ data }}</h2>
+         <h2>Prediction: {{ data }}</h2>
         </center>
+
       </div>
+
+      
     {% endif %}
     
   </body>
